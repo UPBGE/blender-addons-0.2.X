@@ -181,6 +181,14 @@ def WriteRuntime(player_path, output_path, copy_python, overwrite_lib, copy_dlls
         src = os.path.join(blender_dir, datafiles_folder)
         dst = os.path.join(runtime_dir, datafiles_folder)
         shutil.copytree(src, dst)
+        datafiles_folder = os.path.join(bpy.app.version_string.split()[0], "datafiles", "colormanagement")
+        src = os.path.join(blender_dir, datafiles_folder)
+        dst = os.path.join(runtime_dir, datafiles_folder)
+        shutil.copytree(src, dst)
+        datafiles_folder = os.path.join(bpy.app.version_string.split()[0], "datafiles", "fonts")
+        src = os.path.join(blender_dir, datafiles_folder)
+        dst = os.path.join(runtime_dir, datafiles_folder)
+        shutil.copytree(src, dst)
         print("done")
 
 from bpy.props import *

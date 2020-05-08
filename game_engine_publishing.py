@@ -38,7 +38,7 @@ bl_info = {
 }
 
 
-def WriteRuntime(player_path, output_path, asset_paths, copy_python, overwrite_lib, copy_dlls, make_archive, report=print):
+def WriteRuntime(player_path, output_path, asset_paths, copy_python, overwrite_lib, copy_dlls, copy_datafiles, make_archive, report=print):
     import struct
 
     player_path = bpy.path.abspath(player_path)
@@ -150,6 +150,23 @@ def WriteRuntime(player_path, output_path, asset_paths, copy_python, overwrite_l
 
         print("done", flush=True)
 
+    # And copy datafiles folder
+    if copy_datafiles:
+        print("Copying datafiles...", end=" ")
+        datafiles_folder = os.path.join(bpy.app.version_string.split()[0], "datafiles", "gamecontroller")
+        src = os.path.join(blender_dir, datafiles_folder)
+        dst = os.path.join(output_dir, datafiles_folder)
+        shutil.copytree(src, dst)
+        datafiles_folder = os.path.join(bpy.app.version_string.split()[0], "datafiles", "colormanagement")
+        src = os.path.join(blender_dir, datafiles_folder)
+        dst = os.path.join(output_dir, datafiles_folder)
+        shutil.copytree(src, dst)
+        datafiles_folder = os.path.join(bpy.app.version_string.split()[0], "datafiles", "fonts")
+        src = os.path.join(blender_dir, datafiles_folder)
+        dst = os.path.join(output_dir, datafiles_folder)
+        shutil.copytree(src, dst)
+        print("done")
+
     # Copy assets
     for ap in asset_paths:
         src = bpy.path.abspath(ap.name)
@@ -223,6 +240,7 @@ class PublishAllPlatforms(bpy.types.Operator):
                          True,
                          True,
                          True,
+                         True,
                          ps.make_archive,
                          self.report
                          )
@@ -235,6 +253,7 @@ class PublishAllPlatforms(bpy.types.Operator):
                 WriteRuntime(platform.player_path,
                             os.path.join(ps.output_path, platform.name, ps.runtime_name),
                             ps.asset_paths,
+                            True,
                             True,
                             True,
                             True,
